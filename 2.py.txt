@@ -1,0 +1,71 @@
+import cv2
+import matplotlib.pyplot as plt
+import imutils
+def display_image(image_path):
+    img = cv2.imread(image_path, cv2.IMREAD_COLOR)
+    cv2.imshow("Image", img)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
+def convert_to_grayscale(image_path):
+    gray = cv2.imread(image_path, 0)
+    cv2.imshow("Grayscale Image", gray)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
+def flip_image(image_path, flip_code):
+    img = cv2.imread(image_path, cv2.IMREAD_COLOR)
+    flipped = cv2.flip(img, flip_code)
+    cv2.imshow("Flipped Image", flipped)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
+def apply_blurring(image_path):
+    image = cv2.imread(image_path, cv2.IMREAD_COLOR)
+    gaussian = cv2.GaussianBlur(image, (7, 7), 0)
+    median = cv2.medianBlur(image, 5)
+    cv2.imshow("Gaussian Blurring", gaussian)
+    cv2.imshow("Median Blurring", median)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
+def divide_image(image_path):
+    img = cv2.imread(image_path)
+    h, w = img.shape[:2]
+    half_w, half_h = w // 2, h // 2
+    quadrants = {
+        'Top Left': img[:half_h, :half_w],
+        'Top Right': img[:half_h, half_w:],
+        'Bottom Left': img[half_h:, :half_w],
+        'Bottom Right': img[half_h:, half_w:]
+    }
+    for name, quadrant in quadrants.items():
+        cv2.imshow(name, quadrant)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
+def draw_center_lines(image_path):
+    img = cv2.imread(image_path)
+    h, w = img.shape[:2]
+    cv2.line(img, (w//2, 0), (w//2, h), (200, 100, 0), 10)
+    cv2.line(img, (0, h//2), (w, h//2), (200, 100, 0), 10)
+    cv2.imshow("Image with Center Lines", img)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
+def display_quadrants_with_matplotlib(image_path):
+    img = cv2.imread(image_path)
+    h, w = img.shape[:2]
+    quadrants = [
+        img[:h//2, :w//2], img[:h//2, w//2:],
+        img[h//2:, :w//2], img[h//2:, w//2:]
+    ]
+    titles = ['Top Left', 'Top Right', 'Bottom Left', 'Bottom Right']
+    plt.figure(figsize=(5, 5))
+    for i in range(4):
+        plt.subplot(2, 2, i + 1)
+        plt.imshow(cv2.cvtColor(quadrants[i], cv2.COLOR_BGR2RGB))
+        plt.title(titles[i])
+        plt.axis('off')
+    plt.tight_layout()
+    plt.show()
